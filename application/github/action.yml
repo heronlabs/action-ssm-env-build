@@ -14,6 +14,9 @@ inputs:
   AWS_SECRET_ACCESS_KEY:
     description: inputs.AWS_SECRET_ACCESS_KEY
     required: true
+  AWS_ENV_PATH:
+    description: inputs.AWS_ENV_PATH
+    required: true
 
 runs:
   using: composite
@@ -27,3 +30,4 @@ runs:
         AWS_REGION: ${{ inputs.AWS_REGION }}
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
+        AWS_ENV_PATH: ${{ inputs.AWS_ENV_PATH }}
