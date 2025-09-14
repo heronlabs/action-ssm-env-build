@@ -1,6 +1,6 @@
 name: build-ssm-env-action
 
-author: Heronlabs
+author: Heron Labs
 
 description: Build SSM env
 
