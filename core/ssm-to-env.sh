@@ -6,7 +6,7 @@ wget https://github.com/Droplr/aws-env/raw/master/bin/aws-env-linux-amd64 -O aws
 chmod +x aws-env
 
 SESSION=$(aws sts assume-role \
---role-arn "$AWS_ASSUME_ROLE" \
+--role-arn "$AWS_ROLE_TO_ASSUME" \
 --role-session-name "$AWS_ASSUME_ROLE_SESSION" \
 --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
 --output text)
