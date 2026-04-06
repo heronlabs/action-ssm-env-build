@@ -1,8 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
-wget https://github.com/Droplr/aws-env/raw/master/bin/aws-env-linux-amd64 -O aws-env
+: "${AWS_ENV_PATH:?AWS_ENV_PATH is required}"
+
+wget --quiet https://github.com/Droplr/aws-env/raw/master/bin/aws-env-linux-amd64 -O aws-env
 chmod +x aws-env
 
-eval $(./aws-env --recursive --format=dotenv > .env)
+./aws-env --recursive --format=dotenv > .env
