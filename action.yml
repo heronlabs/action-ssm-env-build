@@ -2,37 +2,35 @@ name: build-ssm-env-action
 
 author: Heron Labs
 
-description: Build SSM env
+description: Load AWS SSM Parameter Store values into a .env file for subsequent workflow steps.
 
 inputs:
   AWS_ROLE_TO_ASSUME:
-    description: inputs.AWS_ROLE_TO_ASSUME
+    description: ARN of the IAM role to assume via OIDC for SSM access.
     required: true
   AWS_REGION:
-    description: inputs.AWS_REGION
+    description: AWS region where the SSM parameters live.
     required: true
   AWS_ROLE_DURATION_SECONDS:
-    description: inputs.AWS_ROLE_DURATION_SECONDS
+    description: Duration in seconds for the assumed role session.
     required: true
   AWS_ENV_PATH:
-    description: inputs.AWS_ENV_PATH
+    description: SSM parameter path prefix to load (e.g. /my-app/prod/).
     required: true
 
 runs:
   using: composite
   steps:
-    - name: '[BUILD] | Configure AWS Credentials'
-      uses: aws-actions/configure-aws-credentials@v5
+    - name: 'Configure AWS Credentials'
+      uses: aws-actions/configure-aws-credentials@v6
       with:
         aws-region: ${{ inputs.AWS_REGION }}
         role-to-assume: ${{ inputs.AWS_ROLE_TO_ASSUME }}
         role-duration-seconds: ${{ inputs.AWS_ROLE_DURATION_SECONDS }}
         role-session-name: build-ssm-env-action-session
 
-    - name: '[BUILD] | Create env file'
+    - name: 'Create .env file from SSM'
       shell: bash
-      run: |
-        chmod +x ./build-ssm-env-action/core/ssm-to-env.sh
-        ./build-ssm-env-action/core/ssm-to-env.sh
+      run: bash ${{ github.action_path }}/core/ssm-to-env.sh
       env:
         AWS_ENV_PATH: ${{ inputs.AWS_ENV_PATH }}
