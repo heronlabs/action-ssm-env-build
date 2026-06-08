@@ -1,10 +1,10 @@
 {
-  "name": "build-ssm-env-action",
+  "name": "action-ssm-env-build",
   "version": "1.0.1",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/heronlabs/build-ssm-env-action.git"
+    "url": "git+https://github.com/heronlabs/action-ssm-env-build.git"
   },
   "author": "Heron Labs",
   "license": "MIT"
