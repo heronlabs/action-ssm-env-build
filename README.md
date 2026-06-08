@@ -87,7 +87,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Load SSM env
-        uses: heronlabs/action-ssm-env-build@v2
+        uses: heronlabs/action-ssm-env-build@v1
         with:
           AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_ARN }}
           AWS_REGION: us-east-1
