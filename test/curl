@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Minimal `curl` stub for action-ssm-env-build offline tests.
+#
+# Emulates only the curl surface the action uses:
+#   curl --fail --silent --show-error --location --output <file> <url>
+# The URL is ignored (no network). Instead it writes <file> with an executable
+# bash payload that stands in for the real aws-env binary: when run, the payload
+# appends its own argv to $AWSENV_LOG and prints deterministic dotenv lines.
+#
+# Every invocation is appended (full argv) to $CURL_LOG so tests can assert that
+# curl ran (or, in the missing-input case, that it did not).
+set -euo pipefail
+
+: "${CURL_LOG:?CURL_LOG must point at a log file}"
+: "${AWSENV_LOG:?AWSENV_LOG must point at a log file}"
+printf 'curl %s\n' "$*" >>"$CURL_LOG"
+
+output=""
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --output) output="${2:-}"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+
+[ -n "$output" ] || { printf 'curl stub: no --output target in argv\n' >&2; exit 1; }
+
+cat >"$output" <<PAYLOAD
+#!/usr/bin/env bash
+printf 'aws-env %s\n' "\$*" >>"$AWSENV_LOG"
+printf 'FOO=bar\nBAZ=qux\n'
+PAYLOAD

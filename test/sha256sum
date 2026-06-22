@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Minimal `sha256sum` stub for action-ssm-env-build offline tests.
+#
+# Emulates `sha256sum <file>` -> prints `<hash>  <file>`. The hash is injected via
+# $SHA_STUB_OUT so a test can force a checksum match (the real expected value) or a
+# mismatch (any other 64-hex). No real hashing and no file read happen here.
+#
+# Every invocation is appended (full argv) to $SHA_LOG.
+set -euo pipefail
+
+: "${SHA_LOG:?SHA_LOG must point at a log file}"
+: "${SHA_STUB_OUT:?SHA_STUB_OUT must be set to the hash to emit}"
+printf 'sha256sum %s\n' "$*" >>"$SHA_LOG"
+
+printf '%s  %s\n' "$SHA_STUB_OUT" "${1:-}"
