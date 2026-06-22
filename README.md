@@ -1,72 +1,10 @@
-# Build SSM Env Action
+# SSM Env Build Action
 
-A GitHub Action that loads AWS SSM Parameter Store values under a given path prefix into a `.env` file in the workspace, ready for consumption by subsequent workflow steps.
+[![CI](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/ci.yml/badge.svg)](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/ci.yml)
 
-It authenticates to AWS via OIDC (no long-lived access keys), then runs [`@heronlabs/env-ssm`](https://www.npmjs.com/package/@heronlabs/env-ssm) to write every parameter one level under `AWS_ENV_PATH` to a `.env` file in `dotenv` format.
+> Load AWS SSM Parameter Store values under a path prefix into a `.env` file for later workflow steps.
 
-## Requirements
-
-### Permissions
-
-Your workflow must include these permissions for OIDC authentication:
-
-```yaml
-permissions:
-  id-token: write   # Required for AWS OIDC authentication
-  contents: read    # Required for actions/checkout
-```
-
-### AWS IAM Role
-
-The assumed role must:
-
-1. Trust GitHub's OIDC provider.
-2. Grant read access to the SSM parameters you want to load (`ssm:GetParametersByPath`, plus `kms:Decrypt` when SecureString parameters are used).
-
-Minimal IAM policy:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["ssm:GetParametersByPath", "ssm:GetParameters"],
-      "Resource": "arn:aws:ssm:<region>:<account-id>:parameter/<path-prefix>*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": "kms:Decrypt",
-      "Resource": "arn:aws:kms:<region>:<account-id>:key/<key-id>"
-    }
-  ]
-}
-```
-
-### Supported Runners
-
-- `ubuntu-24.04` (recommended)
-- `ubuntu-22.04`
-- `ubuntu-latest`
-
-### Dependencies
-
-- `node` and `bash` (pre-installed on GitHub-hosted runners — no `setup-node` step required)
-- Internal: `aws-actions/configure-aws-credentials@v6`
-- Engine: [`@heronlabs/env-ssm`](https://www.npmjs.com/package/@heronlabs/env-ssm) pinned to `3.2.0`, fetched at runtime via `npx` (verified by npm provenance)
-
-## Inputs
-
-| Name | Description | Required | Default |
-|------|-------------|----------|---------|
-| `AWS_ROLE_TO_ASSUME` | ARN of the IAM role to assume via OIDC | Yes | — |
-| `AWS_REGION` | AWS region where SSM parameters live | Yes | — |
-| `AWS_ROLE_DURATION_SECONDS` | Duration in seconds for the assumed role session | Yes | — |
-| `AWS_ENV_PATH` | SSM parameter path prefix to load (e.g. `/my-app/prod/`) | Yes | — |
-
-## Outputs
-
-This action does not produce outputs. It writes a `.env` file to the current working directory.
+Authenticates to AWS via OIDC (no long-lived keys), then writes every parameter one level under `AWS_ENV_PATH` to a `.env` file in `dotenv` format in the working directory.
 
 ## Usage
 
@@ -88,7 +26,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Load SSM env
-        uses: heronlabs/action-ssm-env-build@v1
+        uses: heronlabs/action-ssm-env-build@v3
         with:
           AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_ARN }}
           AWS_REGION: us-east-1
@@ -103,11 +41,57 @@ jobs:
           ./deploy.sh
 ```
 
+## Inputs
+
+| Name | Description | Required | Default |
+|------|-------------|----------|---------|
+| `AWS_ROLE_TO_ASSUME` | ARN of the IAM role to assume via OIDC for SSM access. | Yes | — |
+| `AWS_REGION` | AWS region where the SSM parameters live. | Yes | — |
+| `AWS_ROLE_DURATION_SECONDS` | Duration in seconds for the assumed role session. | Yes | — |
+| `AWS_ENV_PATH` | SSM parameter path prefix to load (e.g. `/my-app/prod/`). | Yes | — |
+
+## Outputs
+
+This action produces no GitHub outputs. It writes a `.env` file to the working directory (one var per SSM parameter one level under `AWS_ENV_PATH`, dotenv format).
+
+## Permissions
+
+```yaml
+permissions:
+  id-token: write
+  contents: read
+```
+
+<details><summary>AWS IAM policy</summary>
+
+The assumed role must trust GitHub's OIDC provider and grant read access to the parameters you load. `kms:Decrypt` is required for SecureString parameters.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "ssm:GetParametersByPath",
+      "Resource": "arn:aws:ssm:<region>:<account-id>:parameter/<path-prefix>*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "kms:Decrypt",
+      "Resource": "arn:aws:kms:<region>:<account-id>:key/<key-id>"
+    }
+  ]
+}
+```
+
+</details>
+
 ## Notes
 
-- **Flat (one level) loading**: only parameters directly under `AWS_ENV_PATH` are loaded — nested paths are not traversed. Keep your parameters flat under the path.
-- **Pinned engine**: `@heronlabs/env-ssm` is pinned to an exact version (`ENV_SSM_VERSION` in `core/ssm-to-env.sh`); bump that constant to upgrade.
-- **`.env` location**: the file is written to the current working directory — typically the repo root after `actions/checkout`.
+- Flat load only — one level under `AWS_ENV_PATH`; nested paths are not traversed.
+- `.env` is written to the current working directory (run after `actions/checkout`, typically repo root).
+- SecureString params require `kms:Decrypt` on the encrypting KMS key.
+- Node and bash are pre-installed on GitHub-hosted runners; no `setup-node` needed.
 
 ## License
 
