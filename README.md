@@ -2,7 +2,7 @@
 
 A GitHub Action that loads AWS SSM Parameter Store values under a given path prefix into a `.env` file in the workspace, ready for consumption by subsequent workflow steps.
 
-It authenticates to AWS via OIDC (no long-lived access keys), downloads a checksum-verified, pinned build of [`Droplr/aws-env`](https://github.com/Droplr/aws-env), and exports every parameter under `AWS_ENV_PATH` in `dotenv` format.
+It authenticates to AWS via OIDC (no long-lived access keys), then runs [`@heronlabs/env-ssm`](https://www.npmjs.com/package/@heronlabs/env-ssm) to write every parameter one level under `AWS_ENV_PATH` to a `.env` file in `dotenv` format.
 
 ## Requirements
 
@@ -51,8 +51,9 @@ Minimal IAM policy:
 
 ### Dependencies
 
-- `curl`, `sha256sum`, and `bash` (pre-installed on GitHub-hosted runners)
+- `node` and `bash` (pre-installed on GitHub-hosted runners — no `setup-node` step required)
 - Internal: `aws-actions/configure-aws-credentials@v6`
+- Engine: [`@heronlabs/env-ssm`](https://www.npmjs.com/package/@heronlabs/env-ssm) pinned to `3.2.0`, fetched at runtime via `npx` (verified by npm provenance)
 
 ## Inputs
 
@@ -104,7 +105,8 @@ jobs:
 
 ## Notes
 
-- **Pinned `aws-env`**: the underlying binary is fetched from a specific upstream commit and its SHA-256 is verified before execution. Bumping the binary means updating both constants in `core/ssm-to-env.sh` together.
+- **Flat (one level) loading**: only parameters directly under `AWS_ENV_PATH` are loaded — nested paths are not traversed. Keep your parameters flat under the path.
+- **Pinned engine**: `@heronlabs/env-ssm` is pinned to an exact version (`ENV_SSM_VERSION` in `core/ssm-to-env.sh`); bump that constant to upgrade.
 - **`.env` location**: the file is written to the current working directory — typically the repo root after `actions/checkout`.
 
 ## License

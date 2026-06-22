@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+printf '%s\n' "$*" >> "${NPX_LOG}"
+
+for arg in "$@"; do
+  if [ "${arg}" = "--format=dotenv" ]; then
+    printf "%s\n" "FOO='bar'" "BAZ='qux'"
+    exit 0
+  fi
+done

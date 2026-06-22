@@ -4,22 +4,11 @@ set -euo pipefail
 
 : "${AWS_ENV_PATH:?AWS_ENV_PATH is required}"
 
-# Pinned upstream commit of Droplr/aws-env (the repo has no releases).
-# Bump the commit SHA AND the expected checksum together — never one without the other.
-AWS_ENV_COMMIT="3960d830b2e27cb3ec9c065b761df627f7c55976"
-AWS_ENV_SHA256="1393537837dc67d237a9a31c8b4d3dd994022d65e99c1c1e1968edc347aae63f"
-AWS_ENV_URL="https://raw.githubusercontent.com/Droplr/aws-env/${AWS_ENV_COMMIT}/bin/aws-env-linux-amd64"
+# Pinned version of @heronlabs/env-ssm, fetched at runtime via npx (npm provenance).
+ENV_SSM_VERSION="3.2.0"
 
-curl --fail --silent --show-error --location --output aws-env "${AWS_ENV_URL}"
+command -v node >/dev/null 2>&1 || { echo "node is required to run @heronlabs/env-ssm" >&2; exit 1; }
 
-actual_sha=$(sha256sum aws-env | awk '{print $1}')
-if [ "${actual_sha}" != "${AWS_ENV_SHA256}" ]; then
-  echo "aws-env checksum mismatch" >&2
-  echo "  expected: ${AWS_ENV_SHA256}" >&2
-  echo "  actual:   ${actual_sha}" >&2
-  exit 1
-fi
-
-chmod +x aws-env
-
-./aws-env --recursive --format=dotenv > .env
+# Fetch every SSM parameter one level under AWS_ENV_PATH and write it to .env in
+# dotenv format (NAME='value', single-quote escaped — safe to `set -a; . ./.env`).
+npx --yes "@heronlabs/env-ssm@${ENV_SSM_VERSION}" --format=dotenv > .env
