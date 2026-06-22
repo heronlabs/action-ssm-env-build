@@ -2,7 +2,8 @@
   "stack": "yarn",
   "verify": {
     "install": "yarn install --immutable",
-    "lint": "shellcheck core/*.sh"
+    "test": "bash test/run.sh",
+    "lint": "shellcheck core/*.sh test/run.sh test/node test/npx"
   },
   "worktree": { "dir": ".worktrees", "base": "main" },
   "pr": { "base": "main", "remote": "origin" },
