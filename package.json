@@ -7,5 +7,9 @@
     "url": "git+https://github.com/heronlabs/action-ssm-env-build.git"
   },
   "author": "Heron Labs",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "gts": "^7.0.0"
+  },
+  "prettier": "gts/.prettierrc.json"
 }

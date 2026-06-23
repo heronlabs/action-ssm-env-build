@@ -1,7 +1,7 @@
 {
-  "stack": "yarn",
+  "stack": "pnpm",
   "verify": {
-    "install": "yarn install --immutable",
+    "install": "pnpm install --frozen-lockfile",
     "test": "bash test/run.sh",
     "lint": "shellcheck core/*.sh test/run.sh test/node test/npx"
   },
