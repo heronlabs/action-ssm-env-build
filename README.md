@@ -1,6 +1,6 @@
 # SSM Env Build Action
 
-[![CI](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/ci.yml/badge.svg)](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/ci.yml)
+[![CI](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/continuous-integration.yml)
 
 > Load AWS SSM Parameter Store values under a path prefix into a `.env` file for later workflow steps.
 
