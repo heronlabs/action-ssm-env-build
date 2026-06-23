@@ -11,5 +11,10 @@
   "dependencies": {
     "gts": "^7.0.0"
   },
+  "pnpm": {
+    "overrides": {
+      "tmp@<0.2.6": ">=0.2.6"
+    }
+  },
   "prettier": "gts/.prettierrc.json"
 }
