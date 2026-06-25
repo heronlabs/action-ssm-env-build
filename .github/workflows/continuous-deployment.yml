@@ -26,7 +26,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: heronlabs/action-tag-release-build@7b9529804115cb5c5023c7f3ad2a7a218c618d44 # v4.0.1
+      - uses: heronlabs/action-tag-release-build@1dc75bea16a6f40901337bd10e687b0104ed723d # v4.0.5
         with:
           github-token: ${{ github.token }}
           spec: ${{ inputs.spec }}
