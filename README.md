@@ -1,6 +1,10 @@
-# 🔐 action-ssm-env-build — Load AWS SSM parameters into a .env file.
+# 🔐 action-ssm-env-build — Load SSM params to .env
 
-[![CI](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/continuous-integration.yml)
+[![CI][ci-badge]][ci-url]
+[![License: MIT][license-badge]][license-url]
+[![GitHub Marketplace][marketplace-badge]][marketplace-url]
+
+> **GitHub Action** to load AWS SSM Parameter Store values under a path prefix into a `.env` file for later workflow steps.
 
 ## Contents
 
@@ -12,8 +16,6 @@
 - [How it works](#how-it-works)
 - [Notes](#notes)
 - [License](#license)
-
-> Load AWS SSM Parameter Store values under a path prefix into a `.env` file for later workflow steps.
 
 Authenticates to AWS via OIDC (no long-lived keys), then writes every parameter one level under `AWS_ENV_PATH` to a `.env` file in `dotenv` format in the working directory.
 
@@ -131,3 +133,10 @@ Composite action with a single shell script (`core/ssm-to-env.sh`):
 ## License
 
 MIT
+
+[ci-badge]: https://github.com/heronlabs/action-ssm-env-build/actions/workflows/continuous-integration.yml/badge.svg
+[ci-url]: https://github.com/heronlabs/action-ssm-env-build/actions/workflows/continuous-integration.yml
+[license-badge]: https://img.shields.io/badge/License-MIT-blue.svg
+[license-url]: ./LICENSE
+[marketplace-badge]: https://img.shields.io/badge/GitHub-Marketplace-green.svg
+[marketplace-url]: https://github.com/marketplace/actions/action-ssm-env-build
