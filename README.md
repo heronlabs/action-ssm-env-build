@@ -1,6 +1,16 @@
-# SSM Env Build Action
+# 🔐 action-ssm-env-build — Load AWS SSM parameters into a .env file.
 
 [![CI](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/continuous-integration.yml)
+
+## Contents
+
+- [Usage](#usage)
+- [Inputs](#inputs)
+- [Outputs](#outputs)
+- [Permissions](#permissions)
+- [How it works](#how-it-works)
+- [Notes](#notes)
+- [License](#license)
 
 > Load AWS SSM Parameter Store values under a path prefix into a `.env` file for later workflow steps.
 
@@ -23,7 +33,7 @@ jobs:
   deploy:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Load SSM env
         uses: heronlabs/action-ssm-env-build@v3
@@ -85,6 +95,13 @@ The assumed role must trust GitHub's OIDC provider and grant read access to the 
 ```
 
 </details>
+
+## How it works
+
+Composite action with a single shell script (`core/ssm-to-env.sh`):
+
+1. **Authenticate** — `aws-actions/configure-aws-credentials` assumes the caller's IAM role via OIDC.
+2. **Fetch parameters** — the script fetches a pinned version of `@heronlabs/env-ssm` via `npx`, which loads every SSM parameter one level under `AWS_ENV_PATH` and writes them to `.env` in dotenv format.
 
 ## Notes
 
