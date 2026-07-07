@@ -6,7 +6,7 @@
 
 setup() {
   SCRIPT="$BATS_TEST_DIRNAME/../core/ssm-to-env.sh"
-  STUB_DIR="$BATS_TEST_DIRNAME"
+  STUB_DIR="$BATS_TEST_DIRNAME/__mocks__"
   BASH_BIN="$(command -v bash)"
 
   # Read the pinned env-ssm version from the script itself for assertions
