@@ -1,3 +1,9 @@
+## v3.0.13 (2026-07-07)
+
+### Miscellaneous Chores
+
+* other: Fix branding: icon key→lock, color gray→gray-dark (aaefbceeccf6ee75c0304306d9027731f9b2ae44)
+
 ## v3.0.12 (2026-07-07)
 
 ### Miscellaneous Chores
