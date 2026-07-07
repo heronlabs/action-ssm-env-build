@@ -8,6 +8,7 @@
 - [Inputs](#inputs)
 - [Outputs](#outputs)
 - [Permissions](#permissions)
+- [Architecture](#architecture)
 - [How it works](#how-it-works)
 - [Notes](#notes)
 - [License](#license)
@@ -95,6 +96,23 @@ The assumed role must trust GitHub's OIDC provider and grant read access to the 
 ```
 
 </details>
+
+## Architecture
+
+Bash shell script wrapped by a composite GitHub Action.
+
+```
+├── action.yml                    # Composite action definition
+├── core/
+│   └── ssm-to-env.sh             # CLI entry point — SSM parameter to .env
+├── tests/
+│   ├── __mocks__/
+│   │   ├── node                  # Node.js stub
+│   │   └── npx                   # npx stub
+│   └── action.bats               # BATS tests
+├── Makefile                      # test (bats) + lint (shellcheck)
+└── version.txt                   # Current version
+```
 
 ## How it works
 
