@@ -5,8 +5,8 @@ author: Heron Labs
 description: Load AWS SSM Parameter Store values into a .env file for subsequent workflow steps.
 
 branding:
-  icon: key
-  color: gray
+  icon: lock
+  color: gray-dark
 
 inputs:
   AWS_ROLE_TO_ASSUME:
