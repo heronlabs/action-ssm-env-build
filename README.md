@@ -1,4 +1,4 @@
-# 🥁 action-ssm-env-build — Load AWS SSM parameters into a .env file.
+# 🔐 action-ssm-env-build — Load AWS SSM parameters into a .env file.
 
 [![CI](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/heronlabs/action-ssm-env-build/actions/workflows/continuous-integration.yml)
 
