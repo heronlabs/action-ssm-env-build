@@ -8,6 +8,7 @@
 - [Inputs](#inputs)
 - [Outputs](#outputs)
 - [Permissions](#permissions)
+- [Architecture](#architecture)
 - [How it works](#how-it-works)
 - [Notes](#notes)
 - [License](#license)
@@ -95,6 +96,16 @@ The assumed role must trust GitHub's OIDC provider and grant read access to the 
 ```
 
 </details>
+
+## Architecture
+
+```mermaid
+graph TD
+    A[action.yml] --> B[core/ssm-to-env.sh]
+    B --> C[tests/action.bats]
+    C --> D[Makefile]
+    D --> E[version.txt]
+```
 
 ## How it works
 
