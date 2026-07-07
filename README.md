@@ -96,19 +96,19 @@ The assumed role must trust GitHub's OIDC provider and grant read access to the 
 
 </details>
 
-## Notes
-
-- Flat load only — one level under `AWS_ENV_PATH`; nested paths are not traversed.
-- `.env` is written to the current working directory (run after `actions/checkout`, typically repo root).
-- SecureString params require `kms:Decrypt` on the encrypting KMS key.
-- Node and bash are pre-installed on GitHub-hosted runners; no `setup-node` needed.
-
 ## How it works
 
 Composite action with a single shell script (`core/ssm-to-env.sh`):
 
 1. **Authenticate** — `aws-actions/configure-aws-credentials` assumes the caller's IAM role via OIDC.
 2. **Fetch parameters** — the script fetches a pinned version of `@heronlabs/env-ssm` via `npx`, which loads every SSM parameter one level under `AWS_ENV_PATH` and writes them to `.env` in dotenv format.
+
+## Notes
+
+- Flat load only — one level under `AWS_ENV_PATH`; nested paths are not traversed.
+- `.env` is written to the current working directory (run after `actions/checkout`, typically repo root).
+- SecureString params require `kms:Decrypt` on the encrypting KMS key.
+- Node and bash are pre-installed on GitHub-hosted runners; no `setup-node` needed.
 
 ## License
 
